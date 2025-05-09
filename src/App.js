@@ -1,9 +1,27 @@
 import React, { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [url, setUrl] = useState('');
+  const [showQR, setShowQR] = useState(false);
   const canvasRef = useRef(null);
+
+  const handleGenerate = () => {
+    if (url.trim() === '') {
+      toast.error('Por favor ingresa un enlace válido.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+      return;
+    }
+    setShowQR(true);
+    toast.success('¡Código QR generado con éxito!', {
+      position: 'top-right',
+      autoClose: 2000,
+    });
+  };
 
   const downloadQR = () => {
     const canvas = canvasRef.current.querySelector('canvas');
@@ -17,8 +35,9 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial, sans-serif', textAlign: 'center' }}>
-      <h1>Generador de Código QR</h1>
+    <div style={{ maxWidth: '500px', margin: '0 auto', padding: '2rem', textAlign: 'center' }}>
+      <h1 style={{ marginBottom: '1rem' }}>Generador de Código QR</h1>
+      
       <input
         type="text"
         placeholder="Ingresa un enlace"
@@ -26,27 +45,52 @@ function App() {
         onChange={(e) => setUrl(e.target.value)}
         style={{
           padding: '0.5rem',
-          width: '300px',
+          width: '100%',
           fontSize: '1rem',
           marginBottom: '1rem',
+          borderRadius: '5px',
+          border: '1px solid #ccc',
         }}
       />
-      <div style={{ marginTop: '1rem' }} ref={canvasRef}>
-        {url && <QRCodeCanvas value={url} size={256} />}
-      </div>
-      {url && (
-        <button
-          onClick={downloadQR}
-          style={{
-            marginTop: '1rem',
-            padding: '0.5rem 1rem',
-            fontSize: '1rem',
-            cursor: 'pointer',
-          }}
-        >
-          Descargar PNG
-        </button>
+
+      <button
+        onClick={handleGenerate}
+        style={{
+          padding: '0.5rem 1rem',
+          fontSize: '1rem',
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        Generar Código QR
+      </button>
+
+      {showQR && (
+        <div style={{ marginTop: '2rem' }} ref={canvasRef}>
+          <QRCodeCanvas value={url} size={256} />
+          <div style={{ marginTop: '1rem' }}>
+            <button
+              onClick={downloadQR}
+              style={{
+                padding: '0.5rem 1rem',
+                fontSize: '1rem',
+                backgroundColor: '#2196F3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+              }}
+            >
+              Descargar PNG
+            </button>
+          </div>
+        </div>
       )}
+
+      <ToastContainer />
     </div>
   );
 }
