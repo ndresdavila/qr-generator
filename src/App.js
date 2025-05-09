@@ -36,7 +36,7 @@ function App() {
 
   return (
     <div style={{ maxWidth: '500px', margin: '0 auto', padding: '2rem', textAlign: 'center' }}>
-      <h1 style={{ marginBottom: '1rem' }}>Generador de Código QR</h1>
+      <h1 style={{ marginBottom: '1rem' }}>🌮 Generador de Código QR 🌮</h1>
       
       <input
         type="text"
